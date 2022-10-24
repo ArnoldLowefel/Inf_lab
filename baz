@@ -1,0 +1,43 @@
+def next_value(table):
+    last = table[0]
+    for i in table:
+        if last != i:
+            return i
+
+
+def kasa(suffix, parzyste, nparzyste, k):
+    if suffix[k-1] % 2 == 1:
+        return suffix[k-1]
+    else:
+        return max(suffix[k-1] + next_value(parzyste) - nparzyste[k-1], suffix[k-1] + next_value(nparzyste) - parzyste[k-1])
+
+
+def main():
+    from sys import stdin, stdout
+    import numpy as np
+
+    produkty = np.fromstring(stdin.readline().strip()[::-1], dtype=int, sep=' ')
+    suffix = produkty.cumsum()
+    parzyste = np.full(produkty.size, -1)
+    nparzyste = np.full(produkty.size, -1)
+    for index, i in enumerate(produkty):
+        if i % 2 == 0:
+            parzyste[index] = i
+            nparzyste[index] = nparzyste[index - 1]
+        else:
+            nparzyste[index] = i
+            parzyste[index] = parzyste[index - 1]
+
+    print(produkty)
+    print(suffix)
+    print(parzyste)
+    print(nparzyste)
+    print(next_value(parzyste))
+    print(next_value(nparzyste))
+    print(kasa(suffix, parzyste, nparzyste, 2))
+    print(kasa(suffix, parzyste, nparzyste, 3))
+    print(kasa(suffix, parzyste, nparzyste, 4))
+
+
+if __name__ == "__main__":
+    main()
